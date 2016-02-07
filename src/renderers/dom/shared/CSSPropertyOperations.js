@@ -155,30 +155,32 @@ var CSSPropertyOperations = {
   setValueForStyles: function(node, styles) {
     var style = node.style;
     for (var styleName in styles) {
-      if (!styles.hasOwnProperty(styleName)) {
-        continue;
-      }
-      if (__DEV__) {
-        warnValidStyle(styleName, styles[styleName]);
-      }
-      var styleValue = dangerousStyleValue(styleName, styles[styleName]);
-      if (styleName === 'float') {
-        styleName = styleFloatAccessor;
-      }
-      if (styleValue) {
-        style[styleName] = styleValue;
-      } else {
-        var expansion =
-          hasShorthandPropertyBug &&
-          CSSProperty.shorthandPropertyExpansions[styleName];
-        if (expansion) {
-          // Shorthand property that IE8 won't like unsetting, so unset each
-          // component to placate it
-          for (var individualStyleName in expansion) {
-            style[individualStyleName] = '';
-          }
+      if (styleName && styleName != 0) {
+        if (!styles.hasOwnProperty(styleName)) {
+          continue;
+        }
+        if (__DEV__) {
+          warnValidStyle(styleName, styles[styleName]);
+        }
+        var styleValue = dangerousStyleValue(styleName, styles[styleName]);
+        if (styleName === 'float') {
+          styleName = styleFloatAccessor;
+        }
+        if (styleValue) {
+          style[styleName] = styleValue;
         } else {
-          style[styleName] = '';
+          var expansion =
+            hasShorthandPropertyBug &&
+            CSSProperty.shorthandPropertyExpansions[styleName];
+          if (expansion) {
+            // Shorthand property that IE8 won't like unsetting, so unset each
+            // component to placate it
+            for (var individualStyleName in expansion) {
+              style[individualStyleName] = '';
+            }
+          } else {
+            style[styleName] = '';
+          }
         }
       }
     }
